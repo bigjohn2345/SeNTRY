@@ -1,14 +1,28 @@
---setup the functions i like
-function wait(seconds)
-  local start = os.time()
-  repeat until os.time() > start + seconds
-end
-
 --framework declarations
 local discordia = require('discordia')
 local client = discordia.Client()
 local vip = "216004345739608065" --making this a string then converting isnt necessary but i like it because redundancy IT ACTUALLY IS BWOAH
-function responderror(channel,reason)
+
+
+--setup the functions i like
+function wait(seconds) --wait time
+  local start = os.time()
+  repeat until os.time() > start + seconds
+end
+
+function string.startswith(String,Start)
+   return string.sub(String,1,string.len(Start))==Start
+end
+
+function toTable(...) --covert iterator to table, pass function that returns iterator
+  local arr = {}
+  for v in ... do
+    arr[#arr + 1] = v
+  end
+  return arr
+end
+
+function respondError(channel,reason) --easy way to send errors in chat
 	channel:send {
 	embed = {
 		title = "There were errors with completing your request",
@@ -20,6 +34,32 @@ function responderror(channel,reason)
 	}
 	}
 end
+
+function chatLog(channel,type,action,optuser) --preformatted log messages, optuser optional
+	channel:send {
+	embed = {
+		title = "Action occured: "..tostring(type),
+		if optuser ~= nil then
+			fields = {
+				{name = "Details: ", value = tostring(action), inline = true},
+				{name = "Responsible user: ", value = tostring(optuser), inline = true},
+			},
+		else
+			fields = {
+				{name = "Details:", value = tostring(action), inline = true},
+			},
+		end
+		color = discordia.Color.fromRGB(255,168,38).value,
+		timestamp = discordia.Date():toISO('T', 'Z')
+	}
+	}
+end
+
+function CheckCommands(cmd)
+	
+end
+
+--subscribe to events we want
 
 client:on('ready', function()
 --[[ (DISABLED BECAUSE ODD RATELIMITS)
@@ -40,17 +80,13 @@ client:on('ready', function()
 
 end)
 
-client:on('messageCreate', function(message)
-	if message.content == '//open' and message.author == client:getUser(vip) then
-		if not message.guild then
-			responderror(message.channel,"This command is unavailable through DMs. Sorry!")
-		else
-			responderror(message.channel,"lol this isnt an error trollllololol")
-		end
+client:on('messageCreate', function(message) --do message stuff
+	if string.startswith(tostring(message.content),"//") == true then
+		CheckCommands(cmd)
 	end
 end)
 
---set up the client itself so i can use it
+--set up the client itself so i can use it, keep last
 client:run('Bot MzYwMjA3NTg3MzkzNzk4MTQ0.DL73ww.IMkjc1tiblR3Noke8fl-Nh7SO4M')
 
 
