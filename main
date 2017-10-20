@@ -1,0 +1,56 @@
+--setup the functions i like
+function wait(seconds)
+  local start = os.time()
+  repeat until os.time() > start + seconds
+end
+
+--framework declarations
+local discordia = require('discordia')
+local client = discordia.Client()
+local vip = "216004345739608065" --making this a string then converting isnt necessary but i like it because redundancy IT ACTUALLY IS BWOAH
+function responderror(channel,reason)
+	channel:send {
+	embed = {
+		title = "There were errors with completing your request",
+		fields = {
+		{name = "Error 1:", value = tostring(reason), inline = true},
+		},
+		color = discordia.Color.fromRGB(255,0,0).value,
+		timestamp = discordia.Date():toISO('T', 'Z')
+	}
+	}
+end
+
+client:on('ready', function()
+--[[ (DISABLED BECAUSE ODD RATELIMITS)
+	local gamewheel = coroutine.create(function() --make the coroutine here so it cant complain about no client, maybe fixed in 2.0 but not risking it
+		while true do
+			client:setGame("SeNTRY 2.1A")
+			wait(5)
+			client:setGame("Status: OK")
+			wait(5)
+			client:setGame("by bigjohn2345")
+			wait(5)
+		end
+	end) ]]--
+	--coroutine.resume(gamewheel) --DISABLED
+--end mothballed init code
+	print('Logged in as '.. client.user.username)
+	client:setGame("SeNTRY 2.1")
+
+end)
+
+client:on('messageCreate', function(message)
+	if message.content == '//open' and message.author == client:getUser(vip) then
+		if not message.guild then
+			responderror(message.channel,"This command is unavailable through DMs. Sorry!")
+		else
+			responderror(message.channel,"lol this isnt an error trollllololol")
+		end
+	end
+end)
+
+--set up the client itself so i can use it
+client:run('Bot MzYwMjA3NTg3MzkzNzk4MTQ0.DL73ww.IMkjc1tiblR3Noke8fl-Nh7SO4M')
+
+
