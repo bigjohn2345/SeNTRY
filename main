@@ -87,6 +87,6 @@ client:on('messageCreate', function(message) --do message stuff
 end)
 
 --set up the client itself so i can use it, keep last
-client:run('Bot MzYwMjA3NTg3MzkzNzk4MTQ0.DL73ww.IMkjc1tiblR3Noke8fl-Nh7SO4M')
+
 
 
