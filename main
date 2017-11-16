@@ -2,12 +2,13 @@
 local discordia = require('discordia')
 local client = discordia.Client()
 local vip = "216004345739608065" --making this a string then converting isnt necessary but i like it because redundancy IT ACTUALLY IS BWOAH
+local Cmds = {}
 
 --SETTINGS
 --following is for keying ids to guilds
 local gwl = {}
-gwl.cbj = "GUILDIDHERE"
-gwl.nti = "GUILDIDHERE"
+local iconvector = "https://upload.wikimedia.org/wikipedia/commons/3/30/Emojione_1F530.svg"
+
 
 --following is corresponding log channels to guilds
 
@@ -74,8 +75,10 @@ function AttachListener(msg) -idk do we really need to
 	
 end
 
+function FilterMessage(message)
+
 function doLog(message,type)
-	
+	if message
 end
 
 --subscribe to events we want
@@ -104,6 +107,7 @@ client:on('messageCreate', function(message) --do message stuff
 	if string.startswith(tostring(message.content),"//") == true then
 		CheckCommands(cmd)
 	end
+	FilterMessage(message)
 end)
 
 client:on('messageDelete', function(message) --log message deletions in the appropriate place
