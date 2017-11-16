@@ -1,4 +1,5 @@
 --framework declarations
+http1 = require('coro-http')
 local discordia = require('discordia')
 local client = discordia.Client()
 local vip = "216004345739608065" --making this a string then converting isnt necessary but i like it because redundancy IT ACTUALLY IS BWOAH
@@ -98,7 +99,7 @@ client:on('ready', function()
 	--coroutine.resume(gamewheel) --DISABLED
 --end mothballed init code
 	print('success Logged in as '.. client.user.username)
-	client:setGame("SeNTRY 2.1")
+	client:setGame("Sentry 2.3A")
 
 end)
 
