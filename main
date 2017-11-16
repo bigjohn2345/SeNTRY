@@ -59,6 +59,10 @@ function CheckCommands(cmd)
 	
 end
 
+function AttachListener(msg)
+	
+end
+
 --subscribe to events we want
 
 client:on('ready', function()
@@ -75,12 +79,13 @@ client:on('ready', function()
 	end) ]]--
 	--coroutine.resume(gamewheel) --DISABLED
 --end mothballed init code
-	print('Logged in as '.. client.user.username)
+	print('success Logged in as '.. client.user.username)
 	client:setGame("SeNTRY 2.1")
 
 end)
 
 client:on('messageCreate', function(message) --do message stuff
+	AttachListener(cmd)
 	if string.startswith(tostring(message.content),"//") == true then
 		CheckCommands(cmd)
 	end
