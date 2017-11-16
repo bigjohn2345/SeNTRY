@@ -55,11 +55,11 @@ function chatLog(channel,type,action,optuser) --preformatted log messages, optus
 	}
 end
 
-function CheckCommands(cmd)
+function CheckCommands(cmd) -runs the arg through a TON of if statements
 	
 end
 
-function AttachListener(msg)
+function AttachListener(msg) -idk do we really need to
 	
 end
 
@@ -91,7 +91,16 @@ client:on('messageCreate', function(message) --do message stuff
 	end
 end)
 
+client:on('messageDelete', function(message) --log message deletions in the appropriate place
+	local place = message.Guild
+end)
+
+client:on('messageUpdate', function(message) --log edited messages
+	local place = message.Guild
+end)
+
 --set up the client itself so i can use it, keep last
+--fix this later needs a token
 
 
 
