@@ -3,6 +3,15 @@ local discordia = require('discordia')
 local client = discordia.Client()
 local vip = "216004345739608065" --making this a string then converting isnt necessary but i like it because redundancy IT ACTUALLY IS BWOAH
 
+--SETTINGS
+--following is for keying ids to guilds
+local gwl = {}
+gwl.cbj = "GUILDIDHERE"
+gwl.nti = "GUILDIDHERE"
+
+--following is corresponding log channels to guilds
+
+
 
 --setup the functions i like
 function wait(seconds) --wait time
@@ -55,11 +64,17 @@ function chatLog(channel,type,action,optuser) --preformatted log messages, optus
 	}
 end
 
+--bot operation functions
+
 function CheckCommands(cmd) -runs the arg through a TON of if statements
 	
 end
 
 function AttachListener(msg) -idk do we really need to
+	
+end
+
+function doLog(message,type)
 	
 end
 
@@ -93,14 +108,16 @@ end)
 
 client:on('messageDelete', function(message) --log message deletions in the appropriate place
 	local place = message.Guild
+	doLog(message,1)
 end)
 
 client:on('messageUpdate', function(message) --log edited messages
-	local place = message.Guild
+	doLog(message,2)
 end)
 
 --set up the client itself so i can use it, keep last
 --fix this later needs a token
+client:run("Bot [INSERT TOKEN HERE SOMEHOW]")
 
 
 
