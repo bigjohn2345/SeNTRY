@@ -78,7 +78,10 @@ function AttachListener(msg) -idk do we really need to
 	
 end
 
--------------------------------
+--get deps ready for chat filter
+
+local alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+local blocked_words = {}
 
 function FilterMessage(message) --text filter suite, by AelitePrime at phasorscripts.wordpress.com
 	--[[
@@ -115,51 +118,9 @@ function FilterMessage(message) --text filter suite, by AelitePrime at phasorscr
  
 ]]--
  
-alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-blocked_words = {}
-filename = "words.data"
+
  
-function GetRequiredVersion()
-        return 200
-end
- 
-function OnScriptLoad(process, game, persistent)
-        profilepath = getprofilepath()
-        local file = io.open(string.format("%s\\data\\" .. filename, profilepath), "r")
-        if file then
-                for line in file:lines() do
-                        if string.len(line) > 0 then
-                                local word1 = line
-                                local word = removerepeaters(line)
-                                if word ~= word1 then
-                                        table.insert(blocked_words, word)
-                                end
-                                table.insert(blocked_words, word1)
-                        end
-                end
-        else
-                registertimer(0, "wordtimer")
-        end
-end
- 
-function OnScriptUnload()
-        local file = io.open(string.format("%s\\data\\" .. filename, profilepath), "w")
-        if file then
-                for i = 0,#blocked_words do
-                        if blocked_words[i] then
-                                local word1 = blocked_words[i]
-                                local word = removerepeaters(blocked_words[i])
-                                if word1 ~= word then
-                                        file:write(word .. "\n")
-                                end
-                                file:write(word1 .. "\n")
-                        end
-                end
-        end
-        file:close()
-end
- 
-function OnServerChat(player, type, message)
+function OnServerChat(message)
         if player then
                 local words = tokenizestring(message, " ")
                 local filter = ""
@@ -209,71 +170,8 @@ function OnServerChat(player, type, message)
         return nil
 end
  
-function OnServerCommand(player, command)
-        local response = nil
-        local t = tokenizecmdstring(command)
-        local count = #t
-        if t[1] == "sv_blockedwords" then
-                response = false
-                Command_BlockedWords(player, t[1], count)
-        elseif t[1] == "sv_del_word" then
-                response = false
-                Command_DeleteWord(player, t[1], t[2], count)
-        elseif t[1] == "sv_add_word" then
-                response = false
-                Command_AddWord(player, t[1], t[2], count)
-        elseif t[1] == "sv_reloadwordslist" then
-                response = false
-                Command_ReloadWordsList(player, t[1], count)
-        end
-    return response
-end
- 
-function wordtimer(id, count)
-        local file = io.open(string.format("%s\\data\\" .. filename, profilepath), "w")
-                hprintf(filename .. " not found. File will be created...")
-                file:write("fuck\n")
-                file:write("bitch\n")
-                file:write("pusy\n")
-                file:write("pussy\n")
-                file:write("fagot\n")
-                file:write("faggot\n")
-                file:write("vagina\n")
-                file:write("shit\n")
-                file:write("cock\n")
-                file:write("bastard\n")
-                file:write("dumbas\n")
-                file:write("dumbass\n")
-                file:write("fag\n")
-                file:write("gay\n")
-                file:write("homo\n")
-                file:write("whore\n")
-                file:write("mothafucka\n")
-                file:write("mothafuka\n")
-                file:write("motherfucker\n")
-                file:write("mofo\n")
-                file:write("balsack\n")
-                file:write("ballsack\n")
-                file:write("niga\n")
-                file:write("niger\n")
-                file:write("nigger\n")
-                file:write("querhole\n")
-                file:write("queerhole\n")
-                file:write("testicle\n")
-                file:write("testical\n")
-                file:write("twat\n")
-                file:write("wank\n")
-                file:close()
-                local file = io.open(string.format("%s\\data\\" .. filename, profilepath), "r")
-                for line in file:lines() do
-                        if string.len(line) > 0 then
-                                table.insert(blocked_words, line)
-                        end
-                end    
-                file:close()
-        return false
-end
- 
+
+
 function removerepeaters(word)
         local holdLetter = ""
         local filter = ""
@@ -393,8 +291,7 @@ function convertletter(word)
         return word
 end
 
-----------------------------------------------------------------
- 
+
 function sendresponse(message, player)
         if message == "" then
                 return
@@ -407,6 +304,8 @@ function sendresponse(message, player)
         end
 end
 end
+
+----------------------------------
 
 function doLog(message,type)
 	local place = message.guild.id
