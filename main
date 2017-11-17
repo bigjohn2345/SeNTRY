@@ -69,7 +69,9 @@ end
 --bot operation functions
 
 function CheckCommands(cmd) -runs the arg through a TON of if statements
-	
+	if string.startswith(cmd.cleanContent,//) then
+		if cmd.
+	end
 end
 
 function AttachListener(msg) -idk do we really need to
@@ -79,7 +81,14 @@ end
 function FilterMessage(message)
 
 function doLog(message,type)
-	if message
+	local place = message.guild.id
+		if type == 1 then
+			
+		elseif type == 2 then
+			
+		elseif type == nil then
+			print("Failed to get type-not logged")
+	end
 end
 
 --subscribe to events we want
@@ -104,11 +113,12 @@ client:on('ready', function()
 end)
 
 client:on('messageCreate', function(message) --do message stuff
+	if tostring(message.author.id) == tostring(client.user.id) then print("Message by bot-ignoring")
 	AttachListener(cmd)
 	if string.startswith(tostring(message.content),"//") == true then
 		CheckCommands(cmd)
 	end
-	FilterMessage(message)
+	FilterMessage(message) --filter last as to not filter commands FORWARD THINKING
 end)
 
 client:on('messageDelete', function(message) --log message deletions in the appropriate place
