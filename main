@@ -81,47 +81,10 @@ end
 --get deps ready for chat filter
 
 local alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-local blocked_words = {}
-
-function FilterMessage(message) --text filter suite, by AelitePrime at phasorscripts.wordpress.com
-	--[[
-        Creator: AelitePrime
-        Script Name: Chat Filter Script
-        Website: http://phasorscripts.wordpress.com/
-        Xfire: eliteprime14789x
-        Version: 4.0
-       
-        Reason for Update:
-                - Phasor Update
-               
-       
-        Features:      
-        -- Removes spaces from the words. Example: it will star out “w o r d”, because it removes the spaces and makes it “word”.
-        It will also remove character that is not in the alphabet. Example: “w$o$r#d” will be converted to “word”.
-         
-        -- The words we want to block go here. Make sure they are all LOWER CASE!!
+local blocked_words = {"fuck", "faggot", "shit", "cock", "fk", "fuk", "ass", "asswipe", "damn", "bastard", "dick", "dickk", "dickslap", "dicks", "dumass", "dumbass", "fag", "gayass", "gay", "homo", "ho", "whore", "mothafucka", "mothafuka", "motherfucker", "mofo", "ballsack", "nigga", "nigger", "pussy", "queerhole", "queer", "stfu", "testicle", "testicles", "testical", "testicles", "twat", "vagina", "wank"}
  
-        -- Removes repeated letters in a word. Example: "wooorrdddd" will be converted to "word".
- 
-        -- Commands have been added to the script so you can more easily manage the words being blocked in your server.
- 
-        Commands: sv_add_word, sv_del_word, sv_blockedwords, sv_reloadwordslist
- 
-        Syntax for the commands:
- 
-        sv_add_word [word]
-        sv_del_word [word]
-        sv_blockedwords
-        sv_reloadwordslist
- 
-        -- Warning: Do not leave a blank in the words.txt (Ex: " "). This will cause all words to be blocked.
- 
-]]--
- 
-
- 
-function OnServerChat(message)
-        if player then
+function FilterMessage(message)
+        if message then
                 local words = tokenizestring(message, " ")
                 local filter = ""
                 local filter1 = ""
@@ -132,10 +95,7 @@ function OnServerChat(message)
                         if words[i] then
                                 for x = 1,#blocked_words do
                                         if string.find(words[i], blocked_words[x]) then
-                                                if getplayer(player) then
-                                                        privatesay(player, "Please do not curse")
-                                                end
-                                                return false
+						message:delete()
                                         end
                                 end
                         end
@@ -162,8 +122,7 @@ function OnServerChat(message)
                 filter1 = removerepeaters(filter)
                 for x = 1,#blocked_words do
                         if string.find(filter1, blocked_words[x]) then
-                                privatesay(player, "Please do not curse")
-                                return false
+                                message:delete()
                         end
                 end
         end
@@ -184,126 +143,10 @@ function removerepeaters(word)
         end
         return filter
 end
- 
-function Command_AddWord(executor, command, word, count)
-        if count == 2 then
-                local valid = true
-                for i = 0,#blocked_words do
-                        if word == blocked_words[i] then
-                                valid = false
-                                break
-                        end
-                end
-                if valid then
-                        table.insert(blocked_words, word)
-                        sendresponse(word .. " has been added to the Blocked Words list", executor)
-                else
-                        sendresponse(word .. " is already on the Blocked Words list", executor)
-                end
-        else
-                sendresponse("Invalid Syntax " .. command .. " [word]", executor)
-        end    
-end
- 
-function Command_BlockedWords(executor, command, count)
-        if count == 1 then
-                response = "Blocked Words List\n"
-                local word1,word2,word3,word4
-                for i = 0,#blocked_words do
-                        if blocked_words[i] ~= nil then
-                                if i%4 == 0 then
-                                        response = response .. blocked_words[i]  .. "\n"
-                                else
-                                        response = response .. blocked_words[i]  .. " - "
-                                end
-                        end
-                end
-                sendresponse(response, executor)
-        else
-                sendresponse("Invalid Syntax: " .. command , executor)
-        end
-end
- 
-function Command_DeleteWord(executor, command, word, count)
-        if count == 2 then
-                local valid = false
-                for i = 0,#blocked_words do
-                        if word == blocked_words[i] then
-                                valid = true
-                                blocked_words[i] = nil
-                                break
-                        end
-                end
-                if valid then
-                        sendresponse(word .. " has been deleted from the Blocked Words list", executor)
-                else
-                        sendresponse(word .. " is not in the Blocked Words list", executor)
-                end
-        else
-                sendresponse("Invalid Syntax " ..  command .. " [word]", executor)
-        end
-end
- 
-function Command_ReloadWordsList(executor, command, count)
-        if count == 1 then
-                blocked_words = {}
-                local file = io.open(string.format("%s\\data\\" .. filename, profilepath), "r")
-                if file then
-                        for line in file:lines() do
-                                if string.len(line) > 0 then
-                                        local word1 = line
-                                        local word = removerepeaters(line)
-                                        if word ~= word1 then
-                                                table.insert(blocked_words, word)
-                                        end
-                                        table.insert(blocked_words, word1)
-                                end
-                        end
-                end
-                sendresponse("BlockedWords has been reloaded", executor)
-        else
-                sendresponse("Invalid Syntax " .. command, executor)
-        end
-end
- 
-function convertletter(word)
-        if string.find(word, "1") or string.find(word, "!") then
-                word = "i"
-        end
-        if string.find(word, "4") then
-                word = "u"
-        end
-        if string.find(word, "3") then
-                word = "e"
-        end
-        if string.find(word, "@") then
-                word = "a"
-        end
-        if string.find(word, "<") then
-                word = "c"
-        end
-        if string.find(word, "9") then
-                word = "g"
-        end
-        if string.find(word, "0") then
-                word = "o"
-        end
-        return word
-end
 
 
-function sendresponse(message, player)
-        if message == "" then
-                return
-        end
-        player = tonumber(player)
-        if tonumber(player) and player ~= nil and player ~= -1 and player >= 0 and player < 16 then
-                sendconsoletext(player, message)
-        else
-                hprintf(message)
-        end
-end
-end
+
+
 
 ----------------------------------
 
