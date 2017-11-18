@@ -81,7 +81,7 @@ end
 --get deps ready for chat filter
 
 local alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-local blocked_words = {"fuck", "faggot", "shit", "cock", "fk", "fuk", "ass", "asswipe", "damn", "bastard", "dick", "dickk", "dickslap", "dicks", "dumass", "dumbass", "fag", "gayass", "gay", "homo", "ho", "whore", "mothafucka", "mothafuka", "motherfucker", "mofo", "ballsack", "nigga", "nigger", "pussy", "queerhole", "queer", "stfu", "testicle", "testicles", "testical", "testicles", "twat", "vagina", "wank"}
+local blocked_words = {"badword","fuck", "faggot", "shit", "cock", "fk", "fuk", "ass", "asswipe", "damn", "bastard", "dick", "dickk", "dickslap", "dicks", "dumass", "dumbass", "fag", "gayass", "gay", "homo", "ho", "whore", "mothafucka", "mothafuka", "motherfucker", "mofo", "ballsack", "nigga", "nigger", "pussy", "queerhole", "queer", "stfu", "testicle", "testicles", "testical", "testicles", "twat", "vagina", "wank"}
  
 function FilterMessage(message)
         if message then
@@ -95,6 +95,7 @@ function FilterMessage(message)
                         if words[i] then
                                 for x = 1,#blocked_words do
                                         if string.find(words[i], blocked_words[x]) then
+						doLog(message,3)
 						message:delete()
                                         end
                                 end
@@ -122,6 +123,7 @@ function FilterMessage(message)
                 filter1 = removerepeaters(filter)
                 for x = 1,#blocked_words do
                         if string.find(filter1, blocked_words[x]) then
+				doLog(message,3)
                                 message:delete()
                         end
                 end
@@ -152,12 +154,17 @@ end
 
 function doLog(message,type)
 	local place = message.guild.id
-		if type == 1 then
+		if type == 1 then --message delete by user
 			
-		elseif type == 2 then
+		elseif type == 2 then --message edited anywhere
 			
-		elseif type == nil then
+		elseif type == 3 then --message deleted by filters
+			
+		elseif type == nil then --fallbacks
 			print("Failed to get type-not logged")
+		else
+			print("Invalid log type")
+		end
 	end
 end
 
@@ -182,9 +189,8 @@ client:on('ready', function()
 
 end)
 
-client:on('messageCreate', function(message) --do message stuff
+client:on('messageCreate', function(message) --do message stuff, 
 	if tostring(message.author.id) == tostring(client.user.id) then print("Message by bot-ignoring")
-	AttachListener(cmd)
 	if string.startswith(tostring(message.content),"//") == true then
 		CheckCommands(cmd)
 	end
